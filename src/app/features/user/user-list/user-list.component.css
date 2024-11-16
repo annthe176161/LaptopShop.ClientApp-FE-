@@ -1,0 +1,52 @@
+.controls {
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Trạng thái người dùng */
+.active-status {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive-status {
+  color: red;
+  font-weight: bold;
+}
+
+/* Nút thao tác */
+button {
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Phân trang */
+.pagination {
+  margin-top: 1em;
+}

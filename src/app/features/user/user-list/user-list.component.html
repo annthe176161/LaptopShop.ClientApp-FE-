@@ -1,0 +1,36 @@
+<div class="controls">
+  <input type="text" placeholder="Search by name" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" />
+  <select [(ngModel)]="inactivePeriod" (change)="onFilterInactive()">
+    <option value="-1">All Users</option>
+    <option value="7">Inactive for 1 week</option>
+    <option value="30">Inactive for 1 month</option>
+    <option value="90">Inactive for 1 quarter</option>
+  </select>
+  <button (click)="exportUserList()">Export Users to Excel</button>
+</div>
+
+<div *ngIf="customers && customers.length > 0">
+  <table>
+    <tr>
+      <th>User Name</th>
+      <th>Email</th>
+      <th>Is Active</th>
+      <th>Last Login Date</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let customer of customers">
+      <td>{{ customer.userName }}</td>
+      <td>{{ customer.email }}</td>
+      <td>{{ customer.isActive ? 'Yes' : 'No' }}</td>
+      <td>{{ customer.lastLoginDate | date: 'short' }}</td>
+      <td>
+        <button (click)="toggleAccess(customer.id)">
+          {{ customer.isActive ? 'Disable Access' : 'Enable Access' }}
+        </button>
+        <button (click)="inviteUser(customer.id)">Invite User</button>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div *ngIf="customers.length === 0">No customers found.</div>
