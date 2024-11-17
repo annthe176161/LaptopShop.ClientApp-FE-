@@ -14,22 +14,21 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrl: './user-list.component.css',
 })
 export class UserListComponent implements OnInit {
-  customers: any[] = [];
-  page: number = 1;
-  pageSize: number = 10;
-  totalItems: number = 0;
-  searchTerm: string = '';
-  inactivePeriod: number = -1;
-  isLoading: boolean = false;
+  customers: any[] = []; // Danh sách khách hàng
+  page: number = 1; // Trang hiện tại
+  pageSize: number = 10; // Số lượng khách hàng mỗi trang
+  totalItems: number = 0; // Tổng số người dùng
+  searchTerm: string = ''; // Chuỗi tìm kiếm
+  inactivePeriod: number = -1; // Bộ lọc thời gian không hoạt động
+  isLoading: boolean = false; // Trạng thái đang tải dữ liệu
   searchSubject: Subject<string> = new Subject<string>();
-  Math: any = Math;
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.loadCustomers();
 
-    // Lắng nghe sự thay đổi từ input search
+    // Lắng nghe sự thay đổi từ ô tìm kiếm
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((term) => {
@@ -39,15 +38,16 @@ export class UserListComponent implements OnInit {
       });
   }
 
-  // Tải danh sách khách hàng
+  // Tải danh sách khách hàng từ API
   loadCustomers(): void {
     this.isLoading = true;
+
     this.userService
       .getCustomers(this.page, this.pageSize, this.searchTerm)
       .subscribe(
         (data: any) => {
           this.customers = Array.isArray(data) ? data : data.items || [];
-          this.totalItems = data.totalItems || this.customers.length;
+          this.totalItems = this.customers.length; // Tổng số người dùng
           this.isLoading = false;
         },
         (error: any) => {
@@ -58,14 +58,14 @@ export class UserListComponent implements OnInit {
       );
   }
 
-  // Tìm kiếm khách hàng
+  // Xử lý tìm kiếm
   onSearch(term: string): void {
     this.searchSubject.next(term);
   }
 
   // Chuyển trang
   onPageChange(newPage: number): void {
-    if (newPage > 0 && newPage <= Math.ceil(this.totalItems / this.pageSize)) {
+    if (newPage > 0) {
       this.page = newPage;
       this.loadCustomers();
     }
@@ -78,7 +78,7 @@ export class UserListComponent implements OnInit {
         this.loadCustomers();
       },
       (error: any) => {
-        console.error('Error updating user access:', error);
+        console.error('Error toggling user access:', error);
       }
     );
   }
@@ -87,18 +87,29 @@ export class UserListComponent implements OnInit {
   inviteUser(userId: string): void {
     this.userService.inviteUser(userId).subscribe(
       () => {
-        alert('Lời mời đã được gửi thành công!');
+        alert('Invitation sent successfully!');
       },
       (error) => {
         console.error('Error inviting user:', error);
-        alert('Không thể gửi lời mời. Vui lòng thử lại.');
+        alert('Failed to send invitation.');
       }
     );
   }
 
   // Lọc người dùng không hoạt động
   onFilterInactive(): void {
-    this.loadCustomers();
+    if (this.inactivePeriod !== -1) {
+      this.userService.getInactiveUsers(this.inactivePeriod).subscribe(
+        (data: any[]) => {
+          this.customers = data;
+        },
+        (error: any) => {
+          console.error('Error fetching inactive users:', error);
+        }
+      );
+    } else {
+      this.loadCustomers(); // Hiển thị tất cả người dùng
+    }
   }
 
   // Xuất danh sách người dùng ra file Excel

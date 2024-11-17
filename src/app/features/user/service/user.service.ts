@@ -11,12 +11,12 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  // Lấy danh sách khách hàng có phân trang và tìm kiếm
+  // Lấy danh sách người dùng với phân trang
   getCustomers(
     page: number,
     pageSize: number,
     search: string = ''
-  ): Observable<any> {
+  ): Observable<any[]> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
@@ -25,7 +25,7 @@ export class UserService {
       params = params.set('search', search);
     }
 
-    return this.http.get<any>(`${this.baseUrl}/customers`, { params }).pipe(
+    return this.http.get<any[]>(`${this.baseUrl}/customers`, { params }).pipe(
       catchError((error) => {
         console.error('Error fetching customers:', error);
         return throwError(error);
