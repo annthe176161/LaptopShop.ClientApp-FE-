@@ -1,52 +1,31 @@
-.controls {
-  margin-bottom: 20px;
-}
-
-table {
+html,
+body {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1em;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #f8f9fa;
 }
 
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+.table-responsive {
+  max-height: 75vh;
+  overflow-y: auto;
 }
 
-th {
-  background-color: #f2f2f2;
+.badge {
+  font-size: 0.9rem;
 }
 
-tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-/* Trạng thái người dùng */
-.active-status {
-  color: green;
+.alert-warning {
   font-weight: bold;
 }
 
-.inactive-status {
-  color: red;
-  font-weight: bold;
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
 }
 
-/* Nút thao tác */
-button {
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-right: 5px;
-}
-
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* Phân trang */
-.pagination {
-  margin-top: 1em;
+.pagination button {
+  min-width: 100px;
 }
